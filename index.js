@@ -26,25 +26,22 @@ if (!output.length) {
     console.log(`${colors.red('В заданном диапазоне простые числа не найдены')}`);
     process.exit(2)
 }
-
-output.forEach(prime => {
-    let color, c = 1;
-    while (output.length) {
-        if (c > 3) c = 1;
-        switch (c) {
-            case 1:
-                color = 'green';
-                break;
-            case 2:
-                color = 'yellow';
-                break
-            case 3:
-                color = 'red';
-                break;
-            default:
-                throw 'Something went wrong.'
-        }
-        console.log(`${colors[color](`${output.shift()}`)}`);
-        c++;
+let color, c = 1;
+while (output.length) {
+    if (c > 3) c = 1;
+    switch (c) {
+        case 1:
+            color = 'green';
+            break;
+        case 2:
+            color = 'yellow';
+            break
+        case 3:
+            color = 'red';
+            break;
+        default:
+            throw 'Something went wrong.'
     }
-});
+    console.log(`${colors[color](`${output.shift()}`)}`);
+    c++;
+}
