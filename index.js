@@ -13,7 +13,7 @@ const emitter = new EventEmitter;
 emitter.on('tick', Timer.tick);
 emitter.on('finish', Timer.timerFinishAlert);
 
-if (time < 0) {
+if (time < 1) {
     console.log(`${colors.red('Время старта должно быть в будущем.')}`);
     process.exit(1)
 }
