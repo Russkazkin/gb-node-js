@@ -5,11 +5,22 @@ const args = process.argv.slice(2);
 
 const [t] = args;
 
-const timer = moment(t, 'DD/MM/YYYY HH:mm:ss').unix() - moment().unix();
+const time = moment(t, 'DD/MM/YYYY HH:mm:ss').unix() - moment().unix();
 
-if (timer < 0) {
+if (time < 0) {
     console.log(`${colors.red('Время старта должно быть в будущем.')}`);
     process.exit(1)
 }
 
-console.log(timer);
+let left = time;
+const timer = setInterval(() => {
+    left--;
+    console.log(left);
+}, 1000);
+setTimeout(() => {
+    clearInterval(timer);
+    console.log('finish');
+}, time * 1000);
+
+
+console.log(time);
