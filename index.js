@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 import moment from "moment";
 import colors from "colors";
 import Timer from "./Listners/Timer.js";
+import Time from "./Helpers/Time.js";
 
 const args = process.argv.slice(2);
 
@@ -23,7 +24,7 @@ const timer = setInterval(() => {
     left--;
     emitter.emit('tick', left);
 }, 1000);
-setTimeout(() => {
+Time.setTimeout(() => {
     clearInterval(timer);
     emitter.emit('finish', 'Готово!')
 }, time * 1000);
