@@ -1,1 +1,4 @@
-const args = process.argv.slice(2);
+import dotenv from "dotenv";
+
+dotenv.config();
+
