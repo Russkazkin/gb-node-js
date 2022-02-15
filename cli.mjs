@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import * as fs from "fs";
 import yargs from 'yargs';
+import inquirer from 'inquirer';
 import * as path from "path";
 import {fileURLToPath} from 'url';
 
@@ -19,10 +20,26 @@ const options = ya
     .argv;
 
 const filePath = path.resolve(__dirname, options.path);
-fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) console.log(err);
-    else console.log(data);
-});
+
+if (fs.lstatSync(options.path).isFile()) {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) console.log(err);
+        else console.log(data);
+    });
+} else {
+    const fileFilter = fileOrDir => fs.lstatSync(fileOrDir).isFile();
+    const list = fs.readdirSync(filePath).filter(fileFilter);
+    inquirer.prompt([
+        {
+            name: 'fileName',
+            type: 'list',
+            message: 'Выберите файл для поиска',
+            choices: list,
+        }
+    ]).then(answer => console.log(answer));
+}
+
+
 
 console.log(filePath);
 
