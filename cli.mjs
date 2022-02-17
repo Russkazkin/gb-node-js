@@ -10,24 +10,41 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const options = ya
-    .usage('Usage: -p <path to file>')
-    .options('p', {
-        alias: 'path',
-        describe: 'Path to file',
-        type: 'string',
-        demandOption: true
+    .usage('Usage: -p <path to file> -s <String to search>')
+    .options({
+        'p': {
+            alias: 'path',
+            describe: 'Path to file',
+            type: 'string',
+            demandOption: true
+        },
+        's': {
+            alias: 'search',
+            describe: 'String to search',
+            type: 'string',
+            demandOption: true
+        },
     })
     .argv;
 
+console.log(options);
+
 const filePath = path.resolve(__dirname, options.path);
-let currentPath = filePath;
 
 const fileBrowse = currentPath => {
-    console.log(currentPath);
     if (fs.lstatSync(currentPath).isFile()) {
         fs.readFile(currentPath, 'utf8', (err, data) => {
-            if (err) console.log(err);
-            else console.log(data);
+            if (err) {
+                console.log(err);
+            } else {
+                const regexp = new RegExp(options.search, 'g');
+                const result = data.match(regexp);
+                if (!result) {
+                    console.log('Совпадений не найдено.')
+                } else {
+                    console.log(`Найдено совпадений: ${result.length}`);
+                }
+            }
         });
     } else {
         const list = fs.readdirSync(currentPath);
@@ -40,13 +57,12 @@ const fileBrowse = currentPath => {
             }
         ]).then(answer => {
             const nextPath = `${currentPath}/${answer.fileName}`;
-            console.log(nextPath, 'nextPath');
             fileBrowse(nextPath);
         });
     }
 }
 
-fileBrowse(currentPath);
+fileBrowse(filePath);
 
 
 
