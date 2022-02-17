@@ -27,8 +27,6 @@ const options = ya
     })
     .argv;
 
-console.log(options);
-
 const filePath = path.resolve(__dirname, options.path);
 
 const fileBrowse = currentPath => {
