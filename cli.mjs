@@ -20,24 +20,34 @@ const options = ya
     .argv;
 
 const filePath = path.resolve(__dirname, options.path);
+let currentPath = filePath;
 
-if (fs.lstatSync(options.path).isFile()) {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) console.log(err);
-        else console.log(data);
-    });
-} else {
-    const fileFilter = fileOrDir => fs.lstatSync(fileOrDir).isFile();
-    const list = fs.readdirSync(filePath).filter(fileFilter);
-    inquirer.prompt([
-        {
-            name: 'fileName',
-            type: 'list',
-            message: 'Выберите файл для поиска',
-            choices: list,
-        }
-    ]).then(answer => console.log(answer));
+const fileBrowse = currentPath => {
+    console.log(currentPath);
+    if (fs.lstatSync(currentPath).isFile()) {
+        fs.readFile(currentPath, 'utf8', (err, data) => {
+            if (err) console.log(err);
+            else console.log(data);
+        });
+    } else {
+        const list = fs.readdirSync(currentPath);
+        inquirer.prompt([
+            {
+                name: 'fileName',
+                type: 'list',
+                message: 'Выберите файл для поиска',
+                choices: list,
+            }
+        ]).then(answer => {
+            const nextPath = `${currentPath}/${answer.fileName}`;
+            console.log(nextPath, 'nextPath');
+            fileBrowse(nextPath);
+        });
+    }
 }
+
+fileBrowse(currentPath);
+
 
 
 
