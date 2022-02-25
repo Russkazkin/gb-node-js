@@ -9,4 +9,19 @@ const server = http.createServer(((req, res) => {
     readStream.pipe(res);
 }));
 
+const io = socket(server);
+
+io.on('connection', client => {
+    const connectionData = { id: client.id };
+    client.broadcast.emit('serverConnected', connectionData);
+    client.emit('serverConnected', connectionData);
+    console.log(client.id);
+    client.on('clientMessage', data => {
+        const messageData = { id: client.id, message: data.message };
+        client.broadcast.emit('serverMessage', messageData);
+        client.emit('serverMessage', messageData);
+        console.log(data);
+    });
+});
+
 server.listen(3300);
