@@ -65,10 +65,13 @@
     });
     socket.on('connect', () => console.log('Connected to sockets!'));
     socket.on('serverConnected', ({ id }) => {
-        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-green-700 font-bold">Подключен пользователь: ${id}</div>`)
+        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-green-700 font-bold">User connected: ${id}</div>`)
+    });
+    socket.on('serverDisconnected', ({ id }) => {
+        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-red-700 font-bold">User disconnected: ${id}</div>`)
     });
     socket.on('serverMessage', ({ id, message }) => {
-        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-white font-bold">${id} говорит: <span class="text-stone-700">${message}</span></div>`)
+        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-white font-bold">${id} message: <span class="text-stone-700">${message}</span></div>`)
     });
 </script>
 </body>

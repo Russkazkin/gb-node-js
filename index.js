@@ -22,6 +22,9 @@ io.on('connection', client => {
         client.emit('serverMessage', messageData);
         console.log(data);
     });
+    client.on('disconnect', () => {
+        client.broadcast.emit('serverDisconnected', connectionData);
+    });
 });
 
 server.listen(3300);
