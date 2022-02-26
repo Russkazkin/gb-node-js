@@ -10,7 +10,7 @@
 </head>
 <body class="h-full">
 <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div id="messages"></div>
+    <div class="p-6 mr-3 bg-blue-300 rounded h-64 overflow-y-scroll" id="messages"></div>
     <div class="max-w-md w-full space-y-8">
         <div>
             <img class="mx-auto h-12 w-auto"
@@ -65,10 +65,10 @@
     });
     socket.on('connect', () => console.log('Connected to sockets!'));
     socket.on('serverConnected', ({ id }) => {
-        messageBlock.insertAdjacentHTML('beforeend', `<div>Подключен пользователь: ${id}</div>`)
+        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-green-700 font-bold">Подключен пользователь: ${id}</div>`)
     });
     socket.on('serverMessage', ({ id, message }) => {
-        messageBlock.insertAdjacentHTML('beforeend', `<div>${id} говорит: ${message}</div>`)
+        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-white font-bold">${id} говорит: <span class="text-stone-700">${message}</span></div>`)
     });
 </script>
 </body>
