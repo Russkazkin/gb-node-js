@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+            integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+            crossorigin="anonymous"></script>
+</head>
+<body class="h-full">
+<div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="p-6 mr-3 bg-blue-300 rounded h-64 overflow-y-scroll" id="messages"></div>
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <img class="mx-auto h-12 w-auto"
+                 src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                 alt="Workflow">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Start to chat</h2>
+        </div>
+        <form class="mt-8 space-y-6" name="chat" method="POST">
+            <input type="hidden" name="remember" value="true">
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div>
+                    <label for="message" class="sr-only">You message</label>
+                    <input id="message"
+                           name="message"
+                           type="text"
+                           required
+                           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           placeholder="You message">
+                </div>
+            </div>
+
+            <div>
+                <button type="submit"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                  </span>
+                    Send
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    const socket = io('localhost:3300');
+    const messageBlock = document.querySelector('#messages');
+    const form = document.forms.chat;
+
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const data = {
+            message: formData.get('message'),
+        };
+        socket.emit('clientMessage', data);
+    });
+    socket.on('connect', () => console.log('Connected to sockets!'));
+    socket.on('serverConnected', ({ id }) => {
+        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-green-700 font-bold">User connected: ${id}</div>`)
+    });
+    socket.on('serverDisconnected', ({ id }) => {
+        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-red-700 font-bold">User disconnected: ${id}</div>`)
+    });
+    socket.on('serverMessage', ({ id, message }) => {
+        messageBlock.insertAdjacentHTML('beforeend', `<div class="text-white font-bold">${id} message: <span class="text-stone-700">${message}</span></div>`)
+    });
+</script>
+</body>
+</html>
